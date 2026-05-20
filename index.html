@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TechZone — Electronics Store Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --p1:#7c3aed;--p2:#a855f7;--p3:#ec4899;
+      --grad:linear-gradient(135deg,#7c3aed,#a855f7,#ec4899);
+      --grad2:linear-gradient(135deg,#6d28d9,#9333ea);
+      --bg:#f8f5ff;--bg2:#ffffff;--bg3:#f3eeff;
+      --dark:#0f0a1e;--dark2:#1e1535;
+      --text:#0f0a1e;--text-mid:#5b5175;--text-muted:#9b8fb5;
+      --border:rgba(124,58,237,0.12);--border2:rgba(124,58,237,0.25);
+      --card-shadow:0 4px 24px rgba(124,58,237,0.08);
+      --card-shadow-hover:0 16px 48px rgba(124,58,237,0.18);
+      --white:#fff;--font:'Outfit',sans-serif;
+      --r:12px;--rl:20px;
+    }
+    html{font-size:15px;scroll-behavior:smooth}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+    /* ===== HEADER ===== */
+    .header{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);transition:box-shadow .3s}
+    .header.scrolled{box-shadow:0 4px 32px rgba(124,58,237,0.1)}
+    .header-inner{max-width:1280px;margin:0 auto;padding:0 24px;height:68px;display:flex;align-items:center;gap:16px}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+    .logo-icon{width:36px;height:36px;background:var(--grad);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+    .logo-text{font-size:20px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.5px}
+
+    .header-search{flex:1;max-width:420px;margin:0 auto;position:relative}
+    .header-search input{width:100%;padding:10px 16px 10px 42px;border:1.5px solid var(--border);border-radius:100px;background:var(--bg3);font-family:var(--font);font-size:14px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+    .header-search input:focus{border-color:var(--p1);box-shadow:0 0 0 3px rgba(124,58,237,0.1)}
+    .header-search input::placeholder{color:var(--text-muted)}
+    .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:16px;pointer-events:none}
+
+    .header-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .lang-sw{display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:100px;overflow:hidden}
+    .lb{padding:6px 14px;font-size:12px;font-weight:700;color:var(--text-mid);background:transparent;border:none;cursor:pointer;transition:all .2s;font-family:var(--font)}
+    .lb.active{background:var(--grad);color:#fff}
+
+    .cart-btn{position:relative;width:44px;height:44px;border-radius:12px;background:var(--grad);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 16px rgba(124,58,237,0.3)}
+    .cart-btn:hover{transform:scale(1.05);box-shadow:0 6px 24px rgba(124,58,237,0.4)}
+    .cart-count{position:absolute;top:-6px;right:-6px;background:#ec4899;color:#fff;font-size:10px;font-weight:800;min-width:18px;height:18px;border-radius:100px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--white);transition:transform .2s}
+    .cart-count.bump{animation:bump .3s ease-out}
+    @keyframes bump{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+
+    /* ===== HERO ===== */
+    .hero{background:var(--dark2);padding:60px 24px;text-align:center;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:-40%;left:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(168,85,247,0.3),transparent 70%);pointer-events:none}
+    .hero::after{content:'';position:absolute;bottom:-40%;right:-20%;width:500px;height:500px;background:radial-gradient(circle,rgba(236,72,153,0.25),transparent 70%);pointer-events:none}
+    .hero-inner{position:relative;z-index:1;max-width:700px;margin:0 auto}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3);color:#c084fc;font-size:12px;font-weight:600;padding:5px 14px;border-radius:100px;margin-bottom:20px;letter-spacing:.5px}
+    .hero-title{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;color:#fff;line-height:1.1;margin-bottom:14px;letter-spacing:-1px}
+    .hero-title span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero-sub{font-size:16px;color:rgba(255,255,255,0.55);margin-bottom:32px;line-height:1.6}
+    .hero-stats{display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+    .hs-val{font-size:1.8rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+    .hs-label{font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px;font-weight:500;text-transform:uppercase;letter-spacing:.8px}
+
+    /* ===== MAIN ===== */
+    .main{max-width:1280px;margin:0 auto;padding:32px 24px 60px}
+
+    /* ===== ФИЛЬТРЫ ===== */
+    .filters{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:28px}
+    .filters-label{font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-right:4px}
+    .filter-btn{padding:8px 18px;border-radius:100px;border:1.5px solid var(--border);background:var(--white);font-family:var(--font);font-size:13px;font-weight:600;color:var(--text-mid);cursor:pointer;transition:all .2s}
+    .filter-btn:hover{border-color:var(--p1);color:var(--p1)}
+    .filter-btn.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(124,58,237,0.25)}
+    .sort-wrap{margin-left:auto;display:flex;align-items:center;gap:8px}
+    .sort-label{font-size:12px;color:var(--text-muted);font-weight:500}
+    .sort-select{padding:8px 14px;border:1.5px solid var(--border);border-radius:100px;background:var(--white);font-family:var(--font);font-size:13px;color:var(--text);outline:none;cursor:pointer}
+    .results-count{font-size:13px;color:var(--text-muted);margin-bottom:16px;font-weight:500}
+
+    /* ===== GRID ТОВАРОВ ===== */
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+    .prod-card{background:var(--white);border-radius:var(--rl);border:1.5px solid var(--border);overflow:hidden;transition:all .25s;position:relative}
+    .prod-card:hover{border-color:var(--border2);box-shadow:var(--card-shadow-hover);transform:translateY(-4px)}
+
+    .prod-badge{position:absolute;top:12px;left:12px;z-index:2;font-size:10px;font-weight:800;padding:3px 9px;border-radius:100px;letter-spacing:.5px;text-transform:uppercase}
+    .prod-badge.new{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff}
+    .prod-badge.sale{background:linear-gradient(135deg,#ec4899,#f97316);color:#fff}
+    .prod-badge.hot{background:linear-gradient(135deg,#f97316,#eab308);color:#fff}
+
+    .prod-img{height:180px;display:flex;align-items:center;justify-content:center;font-size:72px;position:relative;overflow:hidden}
+    .prod-img.g1{background:linear-gradient(135deg,#ede9fe,#ddd6fe)}
+    .prod-img.g2{background:linear-gradient(135deg,#fce7f3,#fbcfe8)}
+    .prod-img.g3{background:linear-gradient(135deg,#e0f2fe,#bae6fd)}
+    .prod-img.g4{background:linear-gradient(135deg,#dcfce7,#bbf7d0)}
+    .prod-img.g5{background:linear-gradient(135deg,#fff7ed,#fed7aa)}
+    .prod-img.g6{background:linear-gradient(135deg,#fef9c3,#fef08a)}
+    .prod-img.g7{background:linear(135deg,#f1f5f9,#e2e8f0);background:linear-gradient(135deg,#f1f5f9,#e2e8f0)}
+    .prod-img.g8{background:linear-gradient(135deg,#f0fdf4,#d1fae5)}
+
+    .prod-wishlist{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .2s;opacity:0}
+    .prod-card:hover .prod-wishlist{opacity:1}
+    .prod-wishlist.active{background:#fce7f3;opacity:1}
+    .prod-wishlist:hover{transform:scale(1.15)}
+
+    .prod-body{padding:16px}
+    .prod-cat{font-size:11px;font-weight:700;color:var(--p1);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+    .prod-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.35}
+    .prod-rating{display:flex;align-items:center;gap:5px;margin-bottom:10px}
+    .stars{color:#f59e0b;font-size:12px;letter-spacing:1px}
+    .rating-val{font-size:11px;color:var(--text-muted);font-weight:600}
+    .prod-footer{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .prod-price{font-size:18px;font-weight:800;color:var(--p1)}
+    .prod-price-old{font-size:12px;color:var(--text-muted);text-decoration:line-through;margin-top:1px}
+    .add-btn{padding:8px 16px;border-radius:100px;background:var(--grad);color:#fff;border:none;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;box-shadow:0 3px 12px rgba(124,58,237,0.25)}
+    .add-btn:hover{transform:scale(1.05);box-shadow:0 5px 20px rgba(124,58,237,0.35)}
+    .add-btn:active{transform:scale(0.97)}
+    .add-btn.in-cart{background:linear-gradient(135deg,#059669,#10b981);box-shadow:0 3px 12px rgba(5,150,105,0.25)}
+
+    /* Пустой результат */
+    .no-results{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-muted)}
+    .no-results .icon{font-size:56px;margin-bottom:16px;display:block}
+    .no-results p{font-size:16px;font-weight:600}
+
+    /* ===== ТОСТ ===== */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--dark2);color:#fff;padding:12px 20px;border-radius:100px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;z-index:1000;box-shadow:0 8px 32px rgba(0,0,0,0.3);transition:transform .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast-dot{width:8px;height:8px;border-radius:50%;background:var(--grad)}
+
+    /* ===== КОРЗИНА ===== */
+    .cart-overlay{position:fixed;inset:0;background:rgba(15,10,30,0.5);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px)}
+    .cart-overlay.open{opacity:1;pointer-events:all}
+    .cart-drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;background:var(--white);z-index:400;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);box-shadow:-16px 0 64px rgba(124,58,237,0.15)}
+    .cart-drawer.open{transform:translateX(0)}
+
+    .cart-head{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .cart-title{font-size:18px;font-weight:800;color:var(--text)}
+    .cart-close{width:36px;height:36px;border-radius:10px;background:var(--bg3);border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .2s}
+    .cart-close:hover{background:var(--border)}
+
+    .cart-items{flex:1;overflow-y:auto;padding:16px 24px;display:flex;flex-direction:column;gap:12px}
+    .cart-items::-webkit-scrollbar{width:3px}
+    .cart-items::-webkit-scrollbar-track{background:transparent}
+    .cart-items::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+    .cart-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--text-muted);padding:40px}
+    .cart-empty .icon{font-size:56px}
+    .cart-empty p{font-size:15px;font-weight:600}
+    .cart-empty small{font-size:13px;color:var(--text-muted)}
+
+    .ci{display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border);animation:slideIn .25s ease-out}
+    @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    .ci-img{width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+    .ci-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.3}
+    .ci-price{font-size:13px;font-weight:800;color:var(--p1)}
+    .ci-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+    .qty-btn{width:28px;height:28px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text);transition:all .15s;line-height:1}
+    .qty-btn:hover{background:var(--p1);color:#fff;border-color:var(--p1)}
+    .qty-val{font-size:14px;font-weight:700;min-width:20px;text-align:center}
+    .ci-remove{width:28px;height:28px;border-radius:8px;border:none;background:transparent;cursor:pointer;font-size:16px;color:var(--text-muted);transition:all .15s;display:flex;align-items:center;justify-content:center}
+    .ci-remove:hover{color:#ec4899;background:#fce7f3}
+
+    .cart-foot{padding:20px 24px;border-top:1px solid var(--border)}
+    .cart-summary{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+    .cs-row{display:flex;justify-content:space-between;font-size:13px;color:var(--text-mid)}
+    .cs-row.total{font-size:16px;font-weight:800;color:var(--text);padding-top:8px;border-top:1px solid var(--border);margin-top:4px}
+    .checkout-btn{width:100%;padding:14px;border-radius:var(--r);background:var(--grad);color:#fff;border:none;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(124,58,237,0.3)}
+    .checkout-btn:hover{box-shadow:0 6px 28px rgba(124,58,237,0.4);transform:translateY(-1px)}
+    .checkout-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+    .cart-note{text-align:center;font-size:11px;color:var(--text-muted);margin-top:10px;display:flex;align-items:center;justify-content:center;gap:4px}
+
+    /* ===== АДАПТИВ ===== */
+    @media(max-width:768px){
+      .header-search{display:none}
+      .hero{padding:40px 20px}
+      .hero-stats{gap:24px}
+      .filters{gap:6px}
+      .sort-wrap{display:none}
+      .cart-drawer{width:100vw}
+      .products-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+      .prod-img{height:140px;font-size:52px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header" id="header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text">TechZone</div>
+    </a>
+    <div class="header-search">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="Hledat produkty..." oninput="applyFilters()">
+    </div>
+    <div class="header-right">
+      <div class="lang-sw">
+        <button class="lb active" onclick="setLang('cs')">CS</button>
+        <button class="lb" onclick="setLang('en')">EN</button>
+      </div>
+      <button class="cart-btn" onclick="openCart()" id="cart-btn" aria-label="Košík">
+        🛒
+        <span class="cart-count" id="cart-count" style="display:none">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge" data-i18n="hero_badge">⚡ Nová kolekce 2025</div>
+    <h1 class="hero-title" id="hero-title">Nejlepší <span>technika</span><br>za nejlepší ceny</h1>
+    <p class="hero-sub" data-i18n="hero_sub">Telefony, notebooky, audio a příslušenství — vše na jednom místě. Doprava zdarma nad 999 Kč.</p>
+    <div class="hero-stats">
+      <div><div class="hs-val">500+</div><div class="hs-label" data-i18n="stat1">Produktů</div></div>
+      <div><div class="hs-val">50K+</div><div class="hs-label" data-i18n="stat2">Zákazníků</div></div>
+      <div><div class="hs-val">4.9★</div><div class="hs-label" data-i18n="stat3">Hodnocení</div></div>
+      <div><div class="hs-val">24/7</div><div class="hs-label" data-i18n="stat4">Podpora</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="main">
+  <!-- Фильтры -->
+  <div class="filters" id="filters"></div>
+  <!-- Счётчик результатов -->
+  <div class="results-count" id="results-count"></div>
+  <!-- Товары -->
+  <div class="products-grid" id="products-grid"></div>
+</main>
+
+<!-- ТОСТ -->
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  <span id="toast-text">Přidáno do košíku</span>
+</div>
+
+<!-- ОВЕРЛЕЙ -->
+<div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+
+<!-- КОРЗИНА -->
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-head">
+    <div class="cart-title" id="cart-title">🛒 Košík</div>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-foot" id="cart-foot">
+    <div class="cart-summary" id="cart-summary"></div>
+    <button class="checkout-btn" id="checkout-btn" onclick="checkout()" data-i18n="checkout_btn">Objednat →</button>
+    <div class="cart-note"><span>🔒</span><span data-i18n="cart_note">Bezpečná platba · Doprava zdarma nad 999 Kč</span></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  ПЕРЕВОДЫ
+// ============================================================
+const T = {
+  cs:{
+    hero_badge:'⚡ Nová kolekce 2025',
+    hero_title:'Nejlepší <span>technika</span><br>za nejlepší ceny',
+    hero_sub:'Telefony, notebooky, audio a příslušenství — vše na jednom místě. Doprava zdarma nad 999 Kč.',
+    stat1:'Produktů',stat2:'Zákazníků',stat3:'Hodnocení',stat4:'Podpora',
+    filter_all:'Vše',filter_phones:'Telefony',filter_laptops:'Notebooky',filter_audio:'Audio',filter_acc:'Příslušenství',filter_smart:'Smart Home',
+    sort_label:'Řadit:',sort_default:'Výchozí',sort_price_asc:'Cena ↑',sort_price_desc:'Cena ↓',sort_rating:'Hodnocení',
+    results:n=>`${n} produkt${n===1?'':'ů'}`,
+    add_to_cart:'Do košíku',in_cart:'V košíku ✓',
+    cart_title:'🛒 Košík',cart_empty:'Košík je prázdný',cart_empty_sub:'Přidejte něco z katalogu',
+    subtotal:'Mezisoučet',delivery:'Doprava',delivery_val:'Zdarma',total:'Celkem',
+    checkout_btn:'Objednat →',
+    cart_note:'Bezpečná platba · Doprava zdarma nad 999 Kč',
+    toast_added:'přidáno do košíku',
+    checkout_ok:'✅ Objednávka přijata! Děkujeme.',
+    no_results:'Žádné produkty nenalezeny',
+    search_ph:'Hledat produkty...',
+    badge_new:'Nové',badge_sale:'Sleva',badge_hot:'Výprodej',
+  },
+  en:{
+    hero_badge:'⚡ New Collection 2025',
+    hero_title:'Best <span>tech</span><br>at the best prices',
+    hero_sub:'Phones, laptops, audio and accessories — all in one place. Free shipping on orders over 999 CZK.',
+    stat1:'Products',stat2:'Customers',stat3:'Rating',stat4:'Support',
+    filter_all:'All',filter_phones:'Phones',filter_laptops:'Laptops',filter_audio:'Audio',filter_acc:'Accessories',filter_smart:'Smart Home',
+    sort_label:'Sort:',sort_default:'Default',sort_price_asc:'Price ↑',sort_price_desc:'Price ↓',sort_rating:'Rating',
+    results:n=>`${n} product${n===1?'':'s'}`,
+    add_to_cart:'Add to cart',in_cart:'In cart ✓',
+    cart_title:'🛒 Cart',cart_empty:'Your cart is empty',cart_empty_sub:'Add something from the catalog',
+    subtotal:'Subtotal',delivery:'Shipping',delivery_val:'Free',total:'Total',
+    checkout_btn:'Checkout →',
+    cart_note:'Secure payment · Free shipping over 999 CZK',
+    toast_added:'added to cart',
+    checkout_ok:'✅ Order placed! Thank you.',
+    no_results:'No products found',
+    search_ph:'Search products...',
+    badge_new:'New',badge_sale:'Sale',badge_hot:'Hot',
+  },
+};
+
+// ============================================================
+//  ТОВАРЫ
+// ============================================================
+const PRODUCTS = [
+  {id:1, cat:'phones',  emoji:'📱', grad:'g1', name_cs:'iPhone 15 Pro',         name_en:'iPhone 15 Pro',         price:28990, old:32990, rating:4.9, reviews:2841, badge:'hot'},
+  {id:2, cat:'phones',  emoji:'📱', grad:'g2', name_cs:'Samsung Galaxy S24',    name_en:'Samsung Galaxy S24',    price:21490, old:null,  rating:4.7, reviews:1204, badge:'new'},
+  {id:3, cat:'phones',  emoji:'📱', grad:'g3', name_cs:'Google Pixel 8',        name_en:'Google Pixel 8',        price:16990, old:19990, rating:4.6, reviews:876,  badge:'sale'},
+  {id:4, cat:'phones',  emoji:'📱', grad:'g5', name_cs:'OnePlus 12',            name_en:'OnePlus 12',            price:18490, old:null,  rating:4.5, reviews:534,  badge:null},
+  {id:5, cat:'laptops', emoji:'💻', grad:'g1', name_cs:'MacBook Pro 14" M3',    name_en:'MacBook Pro 14" M3',    price:54990, old:59990, rating:4.9, reviews:1567, badge:'hot'},
+  {id:6, cat:'laptops', emoji:'💻', grad:'g7', name_cs:'Dell XPS 15',           name_en:'Dell XPS 15',           price:38990, old:null,  rating:4.7, reviews:892,  badge:'new'},
+  {id:7, cat:'laptops', emoji:'💻', grad:'g3', name_cs:'Lenovo ThinkPad X1',    name_en:'Lenovo ThinkPad X1',    price:44990, old:49990, rating:4.6, reviews:743,  badge:'sale'},
+  {id:8, cat:'laptops', emoji:'💻', grad:'g4', name_cs:'ASUS ROG Zephyrus',     name_en:'ASUS ROG Zephyrus',     price:47990, old:null,  rating:4.8, reviews:621,  badge:null},
+  {id:9, cat:'audio',   emoji:'🎧', grad:'g2', name_cs:'AirPods Pro 2',         name_en:'AirPods Pro 2',         price:5990,  old:6990,  rating:4.8, reviews:4231, badge:'sale'},
+  {id:10,cat:'audio',   emoji:'🎧', grad:'g5', name_cs:'Sony WH-1000XM5',       name_en:'Sony WH-1000XM5',       price:7490,  old:8990,  rating:4.9, reviews:2108, badge:'hot'},
+  {id:11,cat:'audio',   emoji:'🎧', grad:'g6', name_cs:'Bose QC45',             name_en:'Bose QC45',             price:6990,  old:null,  rating:4.7, reviews:1432, badge:null},
+  {id:12,cat:'audio',   emoji:'🔊', grad:'g8', name_cs:'JBL Charge 5',          name_en:'JBL Charge 5',          price:3290,  old:3990,  rating:4.6, reviews:987,  badge:'sale'},
+  {id:13,cat:'acc',     emoji:'⌨️', grad:'g1', name_cs:'Mech. klávesnice Keychron',name_en:'Keychron Mech. Keyboard',price:2890,old:null, rating:4.8, reviews:1876, badge:'new'},
+  {id:14,cat:'acc',     emoji:'🖱️', grad:'g3', name_cs:'Logitech MX Master 3',  name_en:'Logitech MX Master 3',  price:2490,  old:2990,  rating:4.9, reviews:3241, badge:null},
+  {id:15,cat:'acc',     emoji:'🔋', grad:'g5', name_cs:'Anker PowerBank 26800', name_en:'Anker PowerBank 26800', price:1290,  old:null,  rating:4.7, reviews:654,  badge:null},
+  {id:16,cat:'acc',     emoji:'🖥️', grad:'g7', name_cs:'Monitor LG 4K 27"',     name_en:'LG 4K Monitor 27"',     price:11990, old:13990, rating:4.8, reviews:892,  badge:'sale'},
+  {id:17,cat:'smart',   emoji:'💡', grad:'g6', name_cs:'Philips Hue Starter',   name_en:'Philips Hue Starter',   price:2490,  old:2990,  rating:4.6, reviews:1243, badge:'new'},
+  {id:18,cat:'smart',   emoji:'🔊', grad:'g2', name_cs:'Amazon Echo Dot 5',     name_en:'Amazon Echo Dot 5',     price:1290,  old:null,  rating:4.5, reviews:2341, badge:null},
+  {id:19,cat:'smart',   emoji:'📷', grad:'g8', name_cs:'Arlo Pro 4 kamera',     name_en:'Arlo Pro 4 Camera',     price:5490,  old:6490,  rating:4.7, reviews:876,  badge:'sale'},
+  {id:20,cat:'smart',   emoji:'🌡️', grad:'g4', name_cs:'Nest Termostat',        name_en:'Nest Thermostat',       price:3990,  old:null,  rating:4.8, reviews:1087, badge:'new'},
+];
+
+// ============================================================
+//  СОСТОЯНИЕ
+// ============================================================
+let lang       = 'cs';
+let activeFilter = 'all';
+let sortBy     = 'default';
+let cart       = {};
+let wishlist   = new Set();
+let toastTimer = null;
+
+// ============================================================
+//  ЯЗЫК
+// ============================================================
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l;
+  document.querySelectorAll('.lb').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === l));
+  applyI18n();
+  renderFilters();
+  renderProducts();
+  renderCart();
+}
+
+function t(key) { return T[lang][key] ?? T['cs'][key]; }
+
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = T[lang][el.getAttribute('data-i18n')];
+    if (v !== undefined) el.innerHTML = v;
+  });
+  document.getElementById('hero-title').innerHTML = T[lang].hero_title;
+  document.getElementById('search-input').placeholder = t('search_ph');
+  document.getElementById('cart-title').textContent = t('cart_title');
+}
+
+// ============================================================
+//  ФИЛЬТРЫ
+// ============================================================
+function renderFilters() {
+  const cats = [
+    {key:'all',     label:t('filter_all')},
+    {key:'phones',  label:t('filter_phones')},
+    {key:'laptops', label:t('filter_laptops')},
+    {key:'audio',   label:t('filter_audio')},
+    {key:'acc',     label:t('filter_acc')},
+    {key:'smart',   label:t('filter_smart')},
+  ];
+  const sortOpts = [
+    {val:'default', label:t('sort_default')},
+    {val:'price_asc', label:t('sort_price_asc')},
+    {val:'price_desc',label:t('sort_price_desc')},
+    {val:'rating',  label:t('sort_rating')},
+  ];
+  document.getElementById('filters').innerHTML =
+    `<span class="filters-label">Filter:</span>` +
+    cats.map(c => `<button class="filter-btn${activeFilter===c.key?' active':''}" onclick="setFilter('${c.key}')">${c.label}</button>`).join('') +
+    `<div class="sort-wrap">
+      <span class="sort-label">${t('sort_label')}</span>
+      <select class="sort-select" onchange="setSort(this.value)">
+        ${sortOpts.map(o=>`<option value="${o.val}"${sortBy===o.val?' selected':''}>${o.label}</option>`).join('')}
+      </select>
+    </div>`;
+}
+
+function setFilter(cat) {
+  activeFilter = cat;
+  renderFilters();
+  renderProducts();
+}
+
+function setSort(val) {
+  sortBy = val;
+  renderProducts();
+}
+
+// ============================================================
+//  ТОВАРЫ
+// ============================================================
+function getFilteredProducts() {
+  const search = document.getElementById('search-input')?.value.trim().toLowerCase() || '';
+  let items = PRODUCTS.filter(p => {
+    const name = (lang === 'cs' ? p.name_cs : p.name_en).toLowerCase();
+    const matchCat = activeFilter === 'all' || p.cat === activeFilter;
+    const matchSearch = !search || name.includes(search);
+    return matchCat && matchSearch;
+  });
+
+  if (sortBy === 'price_asc')  items = [...items].sort((a,b) => a.price - b.price);
+  if (sortBy === 'price_desc') items = [...items].sort((a,b) => b.price - a.price);
+  if (sortBy === 'rating')     items = [...items].sort((a,b) => b.rating - a.rating);
+
+  return items;
+}
+
+function applyFilters() {
+  renderProducts();
+}
+
+function renderProducts() {
+  const items = getFilteredProducts();
+  const grid  = document.getElementById('products-grid');
+  const count = document.getElementById('results-count');
+
+  count.textContent = t('results')(items.length);
+
+  if (!items.length) {
+    grid.innerHTML = `<div class="no-results"><span class="icon">🔍</span><p>${t('no_results')}</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map(p => {
+    const name    = lang === 'cs' ? p.name_cs : p.name_en;
+    const inCart  = cart[p.id] && cart[p.id].qty > 0;
+    const loved   = wishlist.has(p.id);
+    const badgeLabel = p.badge ? t('badge_' + p.badge) : '';
+    const stars   = '★'.repeat(Math.round(p.rating)) + '☆'.repeat(5 - Math.round(p.rating));
+    return `
+      <div class="prod-card" id="prod-${p.id}">
+        ${badgeLabel ? `<div class="prod-badge ${p.badge}">${badgeLabel}</div>` : ''}
+        <div class="prod-img ${p.grad}">
+          ${p.emoji}
+          <button class="prod-wishlist${loved?' active':''}" onclick="toggleWish(${p.id})" title="Oblíbené">
+            ${loved ? '❤️' : '🤍'}
+          </button>
+        </div>
+        <div class="prod-body">
+          <div class="prod-cat">${getCatLabel(p.cat)}</div>
+          <div class="prod-name">${name}</div>
+          <div class="prod-rating">
+            <span class="stars">${stars}</span>
+            <span class="rating-val">${p.rating} (${p.reviews.toLocaleString()})</span>
+          </div>
+          <div class="prod-footer">
+            <div>
+              <div class="prod-price">${p.price.toLocaleString()} Kč</div>
+              ${p.old ? `<div class="prod-price-old">${p.old.toLocaleString()} Kč</div>` : ''}
+            </div>
+            <button class="add-btn${inCart?' in-cart':''}" onclick="addToCart(${p.id})" id="btn-${p.id}">
+              ${inCart ? t('in_cart') : t('add_to_cart')}
+            </button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function getCatLabel(cat) {
+  const map = {phones:'filter_phones',laptops:'filter_laptops',audio:'filter_audio',acc:'filter_acc',smart:'filter_smart'};
+  return t(map[cat]) || cat;
+}
+
+// ============================================================
+//  WISHLIST
+// ============================================================
+function toggleWish(id) {
+  if (wishlist.has(id)) wishlist.delete(id);
+  else wishlist.add(id);
+  renderProducts();
+}
+
+// ============================================================
+//  КОРЗИНА
+// ============================================================
+function addToCart(id) {
+  const prod = PRODUCTS.find(p => p.id === id);
+  if (!prod) return;
+
+  if (cart[id]) cart[id].qty++;
+  else cart[id] = { ...prod, qty: 1 };
+
+  updateCartCount();
+  renderProducts();
+  renderCart();
+  showToast(`${lang === 'cs' ? prod.name_cs : prod.name_en} ${t('toast_added')}`);
+
+  // Анимация кнопки корзины
+  const cb = document.getElementById('cart-count');
+  cb.classList.remove('bump');
+  void cb.offsetWidth;
+  cb.classList.add('bump');
+}
+
+function changeQty(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) delete cart[id];
+  updateCartCount();
+  renderProducts();
+  renderCart();
+}
+
+function removeFromCart(id) {
+  delete cart[id];
+  updateCartCount();
+  renderProducts();
+  renderCart();
+}
+
+function updateCartCount() {
+  const total = Object.values(cart).reduce((s,i) => s + i.qty, 0);
+  const el = document.getElementById('cart-count');
+  if (total > 0) {
+    el.textContent = total;
+    el.style.display = 'flex';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+function renderCart() {
+  const items  = Object.values(cart);
+  const itemsEl = document.getElementById('cart-items');
+  const footEl  = document.getElementById('cart-foot');
+
+  document.getElementById('cart-title').textContent = t('cart_title');
+
+  if (!items.length) {
+    itemsEl.innerHTML = `
+      <div class="cart-empty">
+        <span class="icon">🛒</span>
+        <p>${t('cart_empty')}</p>
+        <small>${t('cart_empty_sub')}</small>
+      </div>`;
+    footEl.style.display = 'none';
+    return;
+  }
+
+  footEl.style.display = 'block';
+
+  itemsEl.innerHTML = items.map(item => {
+    const name = lang === 'cs' ? item.name_cs : item.name_en;
+    return `
+      <div class="ci">
+        <div class="ci-img ${item.grad}">${item.emoji}</div>
+        <div style="flex:1;min-width:0">
+          <div class="ci-name">${name}</div>
+          <div class="ci-price">${(item.price * item.qty).toLocaleString()} Kč</div>
+        </div>
+        <div class="ci-right">
+          <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+          <button class="ci-remove" onclick="removeFromCart(${item.id})">🗑️</button>
+        </div>
+      </div>`;
+  }).join('');
+
+  const subtotal = items.reduce((s,i) => s + i.price * i.qty, 0);
+
+  document.getElementById('cart-summary').innerHTML = `
+    <div class="cs-row"><span>${t('subtotal')}</span><span>${subtotal.toLocaleString()} Kč</span></div>
+    <div class="cs-row"><span>${t('delivery')}</span><span style="color:#059669;font-weight:700">${t('delivery_val')}</span></div>
+    <div class="cs-row total"><span>${t('total')}</span><span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${subtotal.toLocaleString()} Kč</span></div>`;
+
+  document.getElementById('checkout-btn').innerHTML = t('checkout_btn');
+  document.querySelector('.cart-note span:last-child').innerHTML = t('cart_note');
+}
+
+function openCart() {
+  document.getElementById('cart-overlay').classList.add('open');
+  document.getElementById('cart-drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderCart();
+}
+
+function closeCart() {
+  document.getElementById('cart-overlay').classList.remove('open');
+  document.getElementById('cart-drawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function checkout() {
+  if (!Object.keys(cart).length) return;
+  const btn = document.getElementById('checkout-btn');
+  btn.textContent = '⏳';
+  btn.disabled = true;
+  setTimeout(() => {
+    cart = {};
+    updateCartCount();
+    renderCart();
+    renderProducts();
+    btn.disabled = false;
+    closeCart();
+    showToast(t('checkout_ok'));
+  }, 1200);
+}
+
+// ============================================================
+//  ТОСТ
+// ============================================================
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  document.getElementById('toast-text').textContent = msg;
+  el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ============================================================
+//  SCROLL
+// ============================================================
+window.addEventListener('scroll', () => {
+  document.getElementById('header').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// ============================================================
+//  СТАРТ
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  applyI18n();
+  renderFilters();
+  renderProducts();
+  renderCart();
+});
+</script>
+</body>
+</html>
